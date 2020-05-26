@@ -42,7 +42,7 @@ RUN /usr/bin/mkdir -pv /tmp/yaourt_install && \
     echo "EDITFILES=0" >> ~/.yaourtrc
 
 
-RUN yaourt -Sy && yaourt -S --noconfirm tesseract-data-eng tesseract-data-deu jbig2enc ocrmypdf
+RUN yaourt -Sy && yaourt -S --noconfirm tesseract-data-eng tesseract-data-deu jbig2enc-git ocrmypdf
 
 COPY scripts/run /usr/bin/run
 ENTRYPOINT ["/usr/bin/run"]
