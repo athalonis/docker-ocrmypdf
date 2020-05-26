@@ -1,0 +1,32 @@
+#!/bin/sh
+
+usage () {
+    echo "$0 [filename]"
+    echo "filename \t- this pdf file will be OCRed"
+}
+
+if [ $# -ne 1 ] ; then
+    usage
+    exit 1
+fi
+
+if [ ! -e $1 ] ; then
+    echo "\"$1\" does not exist"
+    exit 1
+fi
+
+file=$1
+oldfile=$(echo $1 | sed 's/\(.*\)\.\([Pp][Dd][Ff]\)/\1_copy.\2/g')
+mv $file $oldfile
+
+ocrmypdf -l deu --deskew --remove-background --clean-final --optimize 3 "$oldfile" "$file"
+exitcode=$?
+
+if [ $exitcode -eq 6 ]
+then
+    mv $oldfile $file
+    echo "Already OCRd just copy!"
+else
+    echo "Exit Code: $exitcode"
+    echo "Failed to process $file"
+fi
