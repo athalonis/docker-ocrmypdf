@@ -10,13 +10,21 @@ if [ $# -ne 1 ] ; then
     exit 1
 fi
 
-if [ ! -e $1 ] ; then
-    echo "\"$1\" does not exist"
+file="/tmp/input/$1"
+
+if [ ! -e $file ] ; then
+    echo "\"$1\" does not exist. At the moment only relative paths supported."
     exit 1
 fi
 
-file=$1
 oldfile=$(echo $1 | sed 's/\(.*\)\.\([Pp][Dd][Ff]\)/\1_copy.\2/g')
+
+if [ -e $oldfile ] ; then
+    echo "Copy of file already exists \"$oldfile\""
+    echo "Abort"
+    exit 1
+fi
+
 mv $file $oldfile
 
 ocrmypdf -l deu --deskew --remove-background --clean-final --optimize 3 "$oldfile" "$file"
